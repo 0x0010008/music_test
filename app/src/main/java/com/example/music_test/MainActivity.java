@@ -142,8 +142,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getPositionClick(View view) {
-        double res=playMusic.getNowTime(music);
-        editText.setText(String.valueOf(res));
+        try {
+            double res=playMusic.getNowTime(music);
+            editText.setText(String.valueOf(res));
+        } catch (MusicPlayException e) {
+            makeError(e.getMessage());
+        }
     }
 
     public void setPositionClick(View view) {
@@ -155,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnStatueClick(View view) {
-        editText.setText(playMusic.getMusicStaute(music)+"");
+        try {
+            editText.setText(playMusic.getMusicStaute(music)+"");
+        } catch (MusicPlayException e) {
+            makeError(e.getMessage());
+        }
     }
 }

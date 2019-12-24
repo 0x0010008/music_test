@@ -38,7 +38,7 @@ public interface PlayMusic {
      * @param music
      * @return
      */
-    public MusicStatue getMusicStaute(Music music);
+    public MusicStatue getMusicStaute(Music music) throws MusicPlayException;
 
     /**
      * 跳转到音乐的指定位置
@@ -51,7 +51,12 @@ public interface PlayMusic {
      * 得到目前的播放位置，返回值为int类型的秒数
      * @param music
      */
-    public double getNowTime(Music music);
+    public double getNowTime(Music music) throws MusicPlayException;
 
+    /**
+     * 销毁Ram中的音乐
+     * @param music
+     * @throws MusicPlayException
+     */
     public void destroy(Music music) throws MusicPlayException;
 }

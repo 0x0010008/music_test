@@ -16,21 +16,25 @@ public class PlayMusicImpl implements PlayMusic {
 
     @Override
     public void stop(Music music) throws MusicPlayException {
+        checkMusicHandler(music);
         if(!BASS.BASS_ChannelStop(music.getMusicHandler()))throw new MusicPlayException("停止失败");
     }
 
     @Override
     public void play(Music music) throws MusicPlayException{
+        checkMusicHandler(music);
         if(!BASS.BASS_ChannelPlay(music.getMusicHandler(), false))throw new MusicPlayException("播放失败");
     }
 
     @Override
     public void pause(Music music) throws MusicPlayException {
+        checkMusicHandler(music);
         if(!BASS.BASS_ChannelPause(music.getMusicHandler()))throw new MusicPlayException("暂停失败");
     }
 
     @Override
-    public MusicStatue getMusicStaute(Music music){
+    public MusicStatue getMusicStaute(Music music) throws MusicPlayException{
+        checkMusicHandler(music);
         MusicStatue statue;
         switch (BASS.BASS_ChannelIsActive(music.getMusicHandler()))
         {
@@ -43,19 +47,27 @@ public class PlayMusicImpl implements PlayMusic {
 
     @Override
     public void jumpToTime(Music music, double sec) throws MusicPlayException {
+        checkMusicHandler(music);
         long bits=BASS.BASS_ChannelSeconds2Bytes(music.getMusicHandler(),sec);
         if(!BASS.BASS_ChannelSetPosition(music.getMusicHandler(),bits, BASS.BASS_POS_BYTE))throw new MusicPlayException("时间跳转失败");
     }
 
     @Override
-    public double getNowTime(Music music) {
+    public double getNowTime(Music music) throws MusicPlayException{
+        checkMusicHandler(music);
         long bits=BASS.BASS_ChannelGetPosition(music.getMusicHandler(), BASS.BASS_POS_BYTE);
         return BASS.BASS_ChannelBytes2Seconds(music.getMusicHandler(),bits);
     }
 
     @Override
     public void destroy(Music music) throws MusicPlayException {
+        checkMusicHandler(music);
         if(!BASS.BASS_StreamFree(music.getMusicHandler()))throw new MusicPlayException("销毁音乐内存失败");
+        else music.setMusicHandler(0);
+    }
 
+    private void checkMusicHandler(Music music) throws MusicPlayException {
+        if(music==null)throw new MusicPlayException("音乐文件尚未加载");
+        if(music.getMusicHandler()==0)throw new MusicPlayException("音乐尚未载入内存");
     }
 }
