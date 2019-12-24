@@ -1,14 +1,15 @@
 package com.example.music_test.models;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 public class MusicInfo {
     private String author;//作者
     private String album;//专辑
     private int length;//曲长
-    private Image image;//专辑封面
+    private Bitmap image;//专辑封面
 
-    public MusicInfo(String author, String album, int length, Image image) {
+    public MusicInfo(String author, String album, int length, Bitmap image) {
         this.author = author;
         this.album = album;
         this.length = length;
@@ -42,11 +43,11 @@ public class MusicInfo {
         this.length = length;
     }
 
-    public Image getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 }

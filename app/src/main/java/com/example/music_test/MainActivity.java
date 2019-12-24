@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
 //                            }
 //                            ((Button) findViewById(R.id.button)).setText(file);
 //                            //BASS.BASS_ChannelPlay(chan, false);
-                            music=loadMusic.loadMusic(sel);
                             try {
+                                music=loadMusic.loadMusic(sel);
                                 playMusic.loadToRam(music);
                                 tv.setText(music.getMusicFile().getName());
                             }
@@ -152,5 +152,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
+    }
+
+    public void btnStatueClick(View view) {
+        editText.setText(playMusic.getMusicStaute(music)+"");
     }
 }

@@ -12,7 +12,7 @@ public interface LoadMusic {
      * @param file
      * @return
      */
-    public Music loadMusic(File file);
+    public Music loadMusic(File file) throws MusicPlayException;
 
 
     /**

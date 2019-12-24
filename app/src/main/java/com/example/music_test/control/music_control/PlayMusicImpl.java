@@ -34,10 +34,9 @@ public class PlayMusicImpl implements PlayMusic {
         MusicStatue statue;
         switch (BASS.BASS_ChannelIsActive(music.getMusicHandler()))
         {
-            case 1:statue=MusicStatue.stop;break;
-            case 2:statue=MusicStatue.playing;break;
+            case 1:statue=MusicStatue.playing;break;
             case 3:statue=MusicStatue.pause;break;
-            default:statue=MusicStatue.broken;break;
+            default:statue=MusicStatue.stop;break;
         }
         return statue;
     }
