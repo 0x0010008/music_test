@@ -15,17 +15,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.music_test.control.MusicControler;
 import com.example.music_test.control.MusicPlayException;
 import com.example.music_test.control.load_music.LoadMusic;
 import com.example.music_test.control.load_music.LoadMusicImpl;
 import com.example.music_test.control.music_control.PlayMusic;
 import com.example.music_test.control.music_control.PlayMusicImpl;
 import com.example.music_test.control.music_control.PlayToEnd;
+import com.example.music_test.data.MusicListData;
+import com.example.music_test.models.LoopStatue;
 import com.example.music_test.models.Music;
+import com.example.music_test.models.MusicList;
 import com.un4seen.bass.BASS;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     LoadMusic loadMusic;
@@ -52,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
         loadMusic=new LoadMusicImpl();
         playMusic=new PlayMusicImpl();
         iv=findViewById(R.id.imageView);
+        List<Music> musicList=new ArrayList<>();
+        try {
+            musicList.add(loadMusic.musicFactory(new File("/storage/emulated/0/Music/Gravity.mp3")));
+            musicList.add(loadMusic.musicFactory(new File("/storage/emulated/0/Music/Symphony No. 9 - Iv. Allegro Con Fuoco.mp3")));
+        } catch (MusicPlayException e) {
+            makeError(e.getMessage());
+        }
+        MusicListData.setMusicList(new MusicList(musicList,LoopStatue.loop));
 
         try{
             loadMusic.initControler();
@@ -99,8 +113,10 @@ public class MainActivity extends AppCompatActivity {
 //                            ((Button) findViewById(R.id.button)).setText(file);
 //                            //BASS.BASS_ChannelPlay(chan, false);
                             try {
-                                music=loadMusic.loadMusic(sel);
-                                playMusic.loadToRam(music);
+                                music=loadMusic.musicFactory(sel);
+                                List<Music> musicList=new ArrayList<>();
+                                musicList.add(music);
+                                MusicListData.setMusicList(new MusicList(musicList, LoopStatue.loop));
                                 tv.setText(music.getMusicFile().getName());
                                 if(music.getMusicInfo().getImage()!=null)iv.setImageBitmap(music.getMusicInfo().getImage());
                             }
@@ -124,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void pauseClick(View view) {
         try {
-            playMusic.pause(music);
+            MusicControler.pause();
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
@@ -135,10 +151,10 @@ public class MainActivity extends AppCompatActivity {
             PlayToEnd playToEnd=new PlayToEnd() {
                 @Override
                 public void playToEndFunc() {
-
                 }
             };
-            playMusic.play(music,playToEnd);
+            MusicControler.setCallBack(playToEnd);
+            MusicControler.play();
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
@@ -146,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void stopClick(View view) {
         try {
-            playMusic.stop(music);
+            MusicControler.stop();
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
@@ -154,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getPositionClick(View view) {
         try {
-            double res=playMusic.getNowTime(music);
+            double res=MusicControler.getNowPos();
             editText.setText(String.valueOf(res));
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
@@ -163,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPositionClick(View view) {
         try {
-            playMusic.jumpToTime(music,Double.valueOf(editText.getText().toString()));
+            MusicControler.jumpToPos(Double.valueOf(editText.getText().toString()));
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
@@ -171,7 +187,39 @@ public class MainActivity extends AppCompatActivity {
 
     public void btnStatueClick(View view) {
         try {
-            editText.setText(playMusic.getMusicStaute(music)+"");
+            editText.setText(MusicControler.getMusicStatue()+"");
+        } catch (MusicPlayException e) {
+            makeError(e.getMessage());
+        }
+    }
+
+    public void singleClick(View view) {
+        MusicListData.getMusicList().setLoopStatue(LoopStatue.singleloop);
+    }
+
+    public void loopClick(View view) {
+        MusicListData.getMusicList().setLoopStatue(LoopStatue.loop);
+    }
+
+    public void unloopClick(View view) {
+        MusicListData.getMusicList().setLoopStatue(LoopStatue.unloop);
+    }
+
+    public void randomLoopClick(View view) {
+        MusicListData.getMusicList().setLoopStatue(LoopStatue.looprandom);
+    }
+
+    public void nextClick(View view) {
+        try {
+            MusicControler.playNext();
+        } catch (MusicPlayException e) {
+            makeError(e.getMessage());
+        }
+    }
+
+    public void previousClick(View view) {
+        try {
+            MusicControler.playPrevious();
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }

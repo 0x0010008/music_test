@@ -1,5 +1,7 @@
 package com.example.music_test.models;
 
+import android.database.Cursor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -152,12 +154,12 @@ public class MusicList {
         Music music=null;
         switch (loopStatue)
         {
-            case loop:music=getLoopMusic();
-            case unloop:music=getUnloopMusic();
-            case looprandom:music=getLoopRandomMusic();
-            case unlooprandom:music=getUnloopRandomMusic();
-            case single:music=getSingleMusic();
-            case singleloop:music=getSingleLoopMusic();
+            case loop:music=getLoopMusic();break;
+            case unloop:music=getUnloopMusic();break;
+            case looprandom:music=getLoopRandomMusic();break;
+            case unlooprandom:music=getUnloopRandomMusic();break;
+            case single:music=getSingleMusic();break;
+            case singleloop:music=getSingleLoopMusic();break;
         }
         return music;
     }

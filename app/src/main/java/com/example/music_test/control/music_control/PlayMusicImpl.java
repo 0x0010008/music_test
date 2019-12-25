@@ -7,6 +7,7 @@ import com.example.music_test.data.MusicListData;
 import com.example.music_test.models.Music;
 import com.un4seen.bass.BASS;
 public class PlayMusicImpl implements PlayMusic {
+    private int SynHandler;
     @Override
     public void loadToRam(Music music) throws MusicPlayException {
         int res;
@@ -18,28 +19,32 @@ public class PlayMusicImpl implements PlayMusic {
     @Override
     public void stop(Music music) throws MusicPlayException {
         checkMusicHandler(music);
+        BASS.BASS_ChannelRemoveSync(music.getMusicHandler(),SynHandler);
         if(!BASS.BASS_ChannelStop(music.getMusicHandler()))throw new MusicPlayException("停止失败");
+        destroy(music);
     }
 
     @Override
-    public void play(Music music, final PlayToEnd playToEnd) throws MusicPlayException{
+    public void play(final Music music, final PlayToEnd playToEnd) throws MusicPlayException{
         checkMusicHandler(music);
         BASS.SYNCPROC callback=new BASS.SYNCPROC() {
             @Override
             public void SYNCPROC(int handle, int channel, int data, Object user) {
                 try {
+                    BASS.BASS_ChannelRemoveSync(channel,handle);
                     if(user!=null)((PlayToEnd)user).playToEndFunc();
                     BASS.BASS_StreamFree(handle);
-                    if(MusicListData.getMusicList().getNextMusic()!=null){
-                        loadToRam(MusicListData.getMusicList().getNextMusic());
-                        play(MusicListData.getMusicList().getNextMusic(),playToEnd);
+                    Music resMusic=MusicListData.getMusicList().getNextMusic();
+                    if(resMusic!=null){
+                        loadToRam(resMusic);
+                        play(resMusic,(PlayToEnd)user);
                     }
                 } catch (MusicPlayException e) {
                     e.printStackTrace();
                 }
             }
         };
-        BASS.BASS_ChannelSetSync(music.getMusicHandler(), BASS.BASS_SYNC_MIXTIME,BASS.BASS_SYNC_END,callback,playToEnd);
+        SynHandler=BASS.BASS_ChannelSetSync(music.getMusicHandler(),BASS.BASS_SYNC_END,0,callback,playToEnd);
         if(!BASS.BASS_ChannelPlay(music.getMusicHandler(), false))throw new MusicPlayException("播放失败");
     }
 

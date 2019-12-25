@@ -19,7 +19,8 @@ public class MusicControler {
 
     private static Music getNowMusic()
     {
-        return MusicListData.getMusicList().getNowMusic();
+        Music music= MusicListData.getMusicList().getNowMusic();
+        return music;
     }
 
     /**
@@ -28,15 +29,16 @@ public class MusicControler {
      */
     public static void play() throws MusicPlayException
     {
-        if(BASS.BASS_IsStarted())
-        {
-            if(getMusicStatue()!=MusicStatue.stop)
-            {
-                stop();
-                playMusic.chear();
-            }
-        }
-        playMusic.loadToRam(getNowMusic());
+//        if(getNowMusic().getMusicHandler()!=0&&BASS.BASS_IsStarted())
+//        {
+//            if(getMusicStatue()!=MusicStatue.stop)
+//            {
+//                stop();
+//                playMusic.chear();
+//            }
+//
+//        }
+        if(getNowMusic().getMusicHandler()==0)playMusic.loadToRam(getNowMusic());
         playMusic.play(getNowMusic(),playToEnd);
     }
 
@@ -103,6 +105,7 @@ public class MusicControler {
      */
     public static void playNext() throws MusicPlayException
     {
+        stop();
         if(MusicListData.getMusicList().moveToNext()) play();
     }
 
@@ -112,6 +115,7 @@ public class MusicControler {
      */
     public static void playPrevious() throws MusicPlayException
     {
+        stop();
         if(MusicListData.getMusicList().moveToPrevious()) play();
     }
 
@@ -122,6 +126,7 @@ public class MusicControler {
      */
     public static void playTarget(int pos) throws MusicPlayException
     {
+        stop();
         MusicListData.getMusicList().setNowPos(pos);
         play();
     }
