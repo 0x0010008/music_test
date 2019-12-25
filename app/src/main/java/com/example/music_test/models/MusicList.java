@@ -33,6 +33,24 @@ public class MusicList {
     public MusicList(List<Music> collection, LoopStatue loopStatue) {
         this.collection = collection;
         this.loopStatue = loopStatue;
+        resetPos();
+    }
+
+    /**
+     * 从传入播放列表的第一首开始播放，并且启用列表循环模式
+     * @param collection
+     */
+    public MusicList(List<Music> collection) {
+        this.collection = collection;
+        loopStatue=LoopStatue.loop;
+        resetPos();
+    }
+
+    /**
+     * 重置播放位置信息，从第一首开始
+     */
+    private void resetPos()
+    {
         this.nowPos = 0;
         if(collection.size()>1)this.nextPos=nowPos+1;
         else nextPos=0;
@@ -165,7 +183,7 @@ public class MusicList {
         Random rd = new Random();
         for(int i=0;i<randomCollection.size();i++)
         {
-            int j = rd.nextInt(52);//生成随机数
+            int j = rd.nextInt(randomCollection.size());//生成随机数
             Music temp = randomCollection.get(i);//交换
             randomCollection.set(i,randomCollection.get(j));
             randomCollection.set(j,temp);
@@ -182,8 +200,7 @@ public class MusicList {
         Music resMusic;
         if(nowPos+1>=musicList.size()){
             resMusic=musicList.get(0);
-            nowPos=0;
-            nextPos=1;
+            resetPos();
         }
         else {
             resMusic= musicList.get(nextPos);
@@ -202,8 +219,7 @@ public class MusicList {
     {
         Music resMusic=null;
         if(nowPos+1>=musicList.size()){
-            nowPos=0;
-            nextPos=1;
+            resetPos();
         }
         else {
             resMusic= musicList.get(nextPos);
