@@ -3,6 +3,7 @@ package com.example.music_test.control.music_control;
 
 import com.example.music_test.control.MusicPlayException;
 import com.example.music_test.control.MusicStatue;
+import com.example.music_test.data.MusicListData;
 import com.example.music_test.models.Music;
 import com.un4seen.bass.BASS;
 public class PlayMusicImpl implements PlayMusic {
@@ -21,8 +22,24 @@ public class PlayMusicImpl implements PlayMusic {
     }
 
     @Override
-    public void play(Music music) throws MusicPlayException{
+    public void play(Music music, final PlayToEnd playToEnd) throws MusicPlayException{
         checkMusicHandler(music);
+        BASS.SYNCPROC callback=new BASS.SYNCPROC() {
+            @Override
+            public void SYNCPROC(int handle, int channel, int data, Object user) {
+                try {
+                    if(user!=null)((PlayToEnd)user).playToEndFunc();
+                    BASS.BASS_StreamFree(handle);
+                    if(MusicListData.getMusicList().getNextMusic()!=null){
+                        loadToRam(MusicListData.getMusicList().getNextMusic());
+                        play(MusicListData.getMusicList().getNextMusic(),playToEnd);
+                    }
+                } catch (MusicPlayException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        BASS.BASS_ChannelSetSync(music.getMusicHandler(), BASS.BASS_SYNC_MIXTIME,BASS.BASS_SYNC_END,callback,playToEnd);
         if(!BASS.BASS_ChannelPlay(music.getMusicHandler(), false))throw new MusicPlayException("播放失败");
     }
 
@@ -64,6 +81,11 @@ public class PlayMusicImpl implements PlayMusic {
         checkMusicHandler(music);
         if(!BASS.BASS_StreamFree(music.getMusicHandler()))throw new MusicPlayException("销毁音乐内存失败");
         else music.setMusicHandler(0);
+    }
+
+    @Override
+    public void chear() throws MusicPlayException {
+        if(!BASS.BASS_Free())throw new MusicPlayException("从Ram清空音乐缓存失败");
     }
 
     private void checkMusicHandler(Music music) throws MusicPlayException {

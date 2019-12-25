@@ -25,7 +25,7 @@ public interface PlayMusic {
      * 播放音乐
      * @param music
      */
-    public void play(Music music) throws MusicPlayException;
+    public void play(Music music,PlayToEnd playToEnd) throws MusicPlayException;
 
     /**
      * 暂停音乐
@@ -61,12 +61,8 @@ public interface PlayMusic {
     public void destroy(Music music) throws MusicPlayException;
 
     /**
-     * 清空Ran中的音乐
+     * 清空Ram中的音乐
      * @throws MusicPlayException
      */
     public void chear() throws MusicPlayException;
-
-    public void next() throws MusicPlayException;
-
-    public void previous() throws MusicPlayException;
 }

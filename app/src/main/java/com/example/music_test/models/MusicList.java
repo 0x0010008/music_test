@@ -56,6 +56,18 @@ public class MusicList {
         else nextPos=0;
     }
 
+    public boolean moveToNext()
+    {
+        if(getNextMusic()==null)return false;
+        else return true;
+    }
+
+    public boolean moveToPrevious()
+    {
+        if(getPreviousMusic()==null)return false;
+        else return true;
+    }
+
     public List<Music> getCollection() {
         return collection;
     }
@@ -77,6 +89,10 @@ public class MusicList {
 
     public void setNextPos(int nextPos) {
         this.nextPos = nextPos;
+        if(!(nextPos>=collection.size()))
+        {
+            this.nextPos=nextPos;
+        }
     }
 
     public int getNowPos() {
@@ -91,7 +107,11 @@ public class MusicList {
     }
 
     public void setNowPos(int nowPos) {
-        this.nowPos = nowPos;
+        if(!(nowPos>=collection.size()))
+        {
+            this.nowPos = nowPos;
+            nextPos=nowPos+1;
+        }
     }
 
     public LoopStatue getLoopStatue() {

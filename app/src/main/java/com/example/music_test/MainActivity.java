@@ -20,6 +20,7 @@ import com.example.music_test.control.load_music.LoadMusic;
 import com.example.music_test.control.load_music.LoadMusicImpl;
 import com.example.music_test.control.music_control.PlayMusic;
 import com.example.music_test.control.music_control.PlayMusicImpl;
+import com.example.music_test.control.music_control.PlayToEnd;
 import com.example.music_test.models.Music;
 import com.un4seen.bass.BASS;
 
@@ -131,7 +132,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void playClick(View view) {
         try {
-            playMusic.play(music);
+            PlayToEnd playToEnd=new PlayToEnd() {
+                @Override
+                public void playToEndFunc() {
+
+                }
+            };
+            playMusic.play(music,playToEnd);
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
