@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Music music;
     TextView tv;
     EditText editText;
+    ImageView iv;
 
     File filepath;
     String[] filelist;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         filepath = Environment.getExternalStorageDirectory();
         loadMusic=new LoadMusicImpl();
         playMusic=new PlayMusicImpl();
+        iv=findViewById(R.id.imageView);
 
         try{
             loadMusic.initControler();
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                                 music=loadMusic.loadMusic(sel);
                                 playMusic.loadToRam(music);
                                 tv.setText(music.getMusicFile().getName());
+                                if(music.getMusicInfo().getImage()!=null)iv.setImageBitmap(music.getMusicInfo().getImage());
                             }
                             catch (MusicPlayException e)
                             {

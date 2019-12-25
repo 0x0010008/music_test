@@ -59,4 +59,14 @@ public interface PlayMusic {
      * @throws MusicPlayException
      */
     public void destroy(Music music) throws MusicPlayException;
+
+    /**
+     * 清空Ran中的音乐
+     * @throws MusicPlayException
+     */
+    public void chear() throws MusicPlayException;
+
+    public void next() throws MusicPlayException;
+
+    public void previous() throws MusicPlayException;
 }
