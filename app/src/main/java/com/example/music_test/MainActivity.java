@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +24,7 @@ import com.example.music_test.control.music_control.PlayToEnd;
 import com.example.music_test.data.MusicListData;
 import com.example.music_test.models.LoopStatue;
 import com.example.music_test.models.Music;
-import com.example.music_test.models.MusicList;
+import com.example.music_test.models.MusicListCursorImpl;
 import com.un4seen.bass.BASS;
 
 import java.io.File;
@@ -62,10 +61,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             musicList.add(loadMusic.musicFactory(new File("/storage/emulated/0/Music/Gravity.mp3")));
             musicList.add(loadMusic.musicFactory(new File("/storage/emulated/0/Music/Symphony No. 9 - Iv. Allegro Con Fuoco.mp3")));
+            musicList.add(loadMusic.musicFactory(new File("/storage/emulated/0/Music/80. Hotel California (Live in Santa Monica, 7-29-1980) [Remastered].flac")));
         } catch (MusicPlayException e) {
             makeError(e.getMessage());
         }
-        MusicListData.setMusicList(new MusicList(musicList,LoopStatue.loop));
+        MusicListData.setMusicList(new MusicListCursorImpl(musicList));
 
         try{
             loadMusic.initControler();
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                                 music=loadMusic.musicFactory(sel);
                                 List<Music> musicList=new ArrayList<>();
                                 musicList.add(music);
-                                MusicListData.setMusicList(new MusicList(musicList, LoopStatue.loop));
+                                MusicListData.setMusicList(new MusicListCursorImpl(musicList));
                                 tv.setText(music.getMusicFile().getName());
                                 if(music.getMusicInfo().getImage()!=null)iv.setImageBitmap(music.getMusicInfo().getImage());
                             }

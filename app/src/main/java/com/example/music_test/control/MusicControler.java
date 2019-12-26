@@ -5,8 +5,6 @@ import com.example.music_test.control.music_control.PlayMusicImpl;
 import com.example.music_test.control.music_control.PlayToEnd;
 import com.example.music_test.data.MusicListData;
 import com.example.music_test.models.Music;
-import com.example.music_test.models.MusicList;
-import com.un4seen.bass.BASS;
 
 public class MusicControler {
     private static PlayMusic playMusic=new PlayMusicImpl();
@@ -19,7 +17,7 @@ public class MusicControler {
 
     private static Music getNowMusic()
     {
-        Music music= MusicListData.getMusicList().getNowMusic();
+        Music music= MusicListData.getMusicList().getMusic();
         return music;
     }
 
@@ -127,7 +125,7 @@ public class MusicControler {
     public static void playTarget(int pos) throws MusicPlayException
     {
         stop();
-        MusicListData.getMusicList().setNowPos(pos);
+        MusicListData.getMusicList().moveToPosition(pos);
         play();
     }
 }

@@ -1,15 +1,15 @@
 package com.example.music_test.data;
 
-import com.example.music_test.models.MusicList;
+import com.example.music_test.models.MusicListCursor;
 
 public class MusicListData {
-    private static MusicList musicList;
+    private static MusicListCursor musicList;
 
-    public static MusicList getMusicList() {
+    public static MusicListCursor getMusicList() {
         return musicList;
     }
 
-    public static void setMusicList(MusicList musicList) {
+    public static void setMusicList(MusicListCursor musicList) {
         MusicListData.musicList = musicList;
     }
 }

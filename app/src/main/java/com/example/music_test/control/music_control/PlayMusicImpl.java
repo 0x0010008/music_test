@@ -34,10 +34,10 @@ public class PlayMusicImpl implements PlayMusic {
                     BASS.BASS_ChannelRemoveSync(channel,handle);
                     if(user!=null)((PlayToEnd)user).playToEndFunc();
                     BASS.BASS_StreamFree(handle);
-                    Music resMusic=MusicListData.getMusicList().getNextMusic();
-                    if(resMusic!=null){
-                        loadToRam(resMusic);
-                        play(resMusic,(PlayToEnd)user);
+                    if(MusicListData.getMusicList().moveToNext())
+                    {
+                        loadToRam(MusicListData.getMusicList().getMusic());
+                        play(MusicListData.getMusicList().getMusic(),(PlayToEnd)user);
                     }
                 } catch (MusicPlayException e) {
                     e.printStackTrace();
